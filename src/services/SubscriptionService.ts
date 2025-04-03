@@ -1,6 +1,6 @@
 import httpClient from "@/services/httpClient";
 import type {ISubscription} from "@/types/interfaces/ISubscription";
-import {mapToIBook} from "@/utils/mappers";
+import {mapToISubscription} from "@/utils/mappers";
 
 export class SubscriptionService {
     async getAllSubscriptions(){
