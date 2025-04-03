@@ -27,8 +27,8 @@ const subscriptions = ref<Subscription[]>([]);
 
 const fetchSubscriptions = async () => {
   try {
-    const SubscriptionService = new SubscriptionService();
-    subscriptions.value = await SubscriptionService.getAllSubscriptions();
+    const subscriptionService = new SubscriptionService();
+    subscriptions.value = await subscriptionService.getAllSubscriptions();
 }    catch (err: any) {
     error.value = err.message;
 } finally {
