@@ -20,4 +20,22 @@ export class SubscriptionService {
         }
         return [];
     }
+
+    async getSubscriptionById(id: number) {
+        let attempts = 0;
+        const maxAttempts = 5;
+        while (attempts < maxAttempts) {
+            try {
+                const response = await httpClient.get<ISubscription>(`/subscriptions/${id}`);
+                return response.data;
+            } catch (error: any) {
+                console.error("Error fetching subscription:", error);
+                attempts++;
+                if (attempts === maxAttempts) {
+                    throw new Error("Failed to fetch subscription after multiple attempts");
+                }
+            }
+        }
+        return null;
+    }
 }
