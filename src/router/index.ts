@@ -7,6 +7,11 @@ const routes = [
     name: 'Home',
     component: HomeView
   },
+  {
+    path: '/',
+    name: 'subscriptions',
+    component: () => import('../views/SubscriptionView.vue'),
+  },
 ];
 
 // Create the router instance
