@@ -1,44 +1,54 @@
 <template>
-    <div class="mt-20">
-        <h1 class="text-2xl font-bold">Upcoming Payments:</h1>
-        <div v-if="loading" class="text-center text-gray-600">Loading books...</div>
-        <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
+        <div>
+            <h1 class="text-2xl font-bold text-center mt-30">Upcoming Payments:</h1>
 
-        <p>This is a simple test component.</p>
-    </div>
+            <!-- Simple Calendar -->
+            <div class="max-w-4xl mx-auto mt-6 p-4 bg-white shadow rounded-lg">
+                <div class="grid grid-cols-7 gap-2 text-center font-bold">
+                    <span>Sun</span>
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                </div>
+                <div class="grid grid-cols-7 gap-2 mt-2">
+                    <div v-for="(day, index) in calendarDays" :key="index" class="h-16 border flex items-center justify-center relative">
+                        <span>{{ day.date }}</span>
+                        <div v-if="day.payments.length" class="absolute bottom-1 text-xs text-red-500">
+                            {{ day.payments.length }} payment(s)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </template>
-  
-  <script setup lang="ts">
+
+<script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import {SubscriptionService} from '@/services/SubscriptionService';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useUserStore } from '@/stores/userStore';
+import type { ISubscription } from '@/types/interfaces/ISubscription';
+import { getCalendarForMonth } from '@/utils/calendarUtils.ts';
 
-interface Subscription {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    createdAt: Date;
-    updatedAt: Date;
-  }
+const subscriptionStore = useSubscriptionStore();
+const userStore = useUserStore();
+const error = ref<string | null>(null);
+const calendarDays = ref<Array<{ date: number; payments: ISubscription[] }>>([]);
 
-const loading = ref(true);
-const error = ref(null);
-const subscriptions = ref<Subscription[]>([]);
+onMounted(async () => {
+    try {
+        const payments = await subscriptionStore.fetchUpcomingPayments(); // Fetch upcoming payments from backend
+        calendarDays.value = getCalendarForMonth(payments); // Generate calendar with payment data
+    } catch (err) {
+        error.value = 'Failed to load calendar data';
+    }
+});
+</script>
 
-const fetchSubscriptions = async () => {
-  try {
-    const subscriptionService = new SubscriptionService();
-    subscriptions.value = await subscriptionService.getAllSubscriptions();
-}    catch (err: any) {
-    error.value = err.message;
-} finally {
-    loading.value = false;
+<style scoped>
+.grid {
+    display: grid;
 }
-};
-onMounted(fetchSubscriptions);
-  </script>
-  
-  <style scoped>
-  </style>
-  
-  
+</style>
