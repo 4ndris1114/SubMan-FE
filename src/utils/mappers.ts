@@ -16,7 +16,9 @@ export const mapToISubscription = (subscription: any): ISubscription => {
         name: subscription.name,
         description: subscription.description,
         price: subscription.price,
-        createdAt: new Date(subscription.createdAt),
-        updatedAt: new Date(subscription.updatedAt),
+        dueDate: new Date(subscription.dueDate),
+        currency: subscription.currency
     };
 };
+
+
