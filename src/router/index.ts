@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
+import { useUserStore } from '@/stores/userStore'
+
 
 const routes = [
   {
@@ -8,7 +10,7 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/',
+    path: '/subscriptions',
     name: 'subscriptions',
     component: () => import('../views/SubscriptionView.vue'),
   },
