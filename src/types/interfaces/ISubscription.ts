@@ -1,8 +1,8 @@
 export interface ISubscription {
-    id: number;
+    id: string;
     name: string;
     description: string;
     price: number;
-    createdAt: Date;
-    updatedAt: Date;
+    dueDate: Date;
+    currency: string;
 }
