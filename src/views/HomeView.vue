@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <Navbar />
-        <div class="p-4 ml-40">
+        <div class="min-h-screen">
             <UpcomingPayment />
         </div>
     </div>
