@@ -18,7 +18,7 @@
                     <input v-model="newSubscription!.name" type="text" placeholder="Name" class="border p-2 rounded" required />
                     <input v-model="newSubscription!.description" type="text" placeholder="Description" class="border p-2 rounded" required />
                     <input v-model.number="newSubscription!.price" type="number" placeholder="Price" class="border p-2 rounded" required />
-                    <input v-model="newSubscription!.dueDate" type="date" class="border p-2 rounded" required />
+                    <input v-model="newSubscription!.startDate" type="date" class="border p-2 rounded" required />
                     <input v-model="newSubscription!.currency" type="text" placeholder="Currency" class="border p-2 rounded" />
                 </div>
                 <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -42,7 +42,7 @@
                     <tr v-for="(subscription, index) in subscriptions" :key="subscription.id">
                         <td class="py-2 px-4">{{ subscription.name }}</td>
                         <td class="py-2 px-4">${{ subscription.price }}</td>
-                        <td class="py-2 px-4">{{ subscription.dueDate }}</td>
+                        <td class="py-2 px-4">{{ subscription.startDate }}</td>
                         <td class="py-2 px-4">
                             <button @click="toggleDetails(index)" class="text-blue-500 hover:text-blue-700">
                                 <fa icon="chevron-down" class="scale-140 text-blue" v-if="!isOpen(index)" />
@@ -54,7 +54,7 @@
                         <td colspan="4" class="py-4 px-4 bg-gray-50">
                             <div class="p-4 border border-gray-200 rounded-lg">
                                 <p><strong>Amount to Pay:</strong> ${{ subscription.price }}</p>
-                                <p><strong>Due Date:</strong> {{ subscription.dueDate }}</p>
+                                <p><strong>Due Date:</strong> {{ subscription.startDate }}</p>
                                 <p><strong>Description:</strong> {{ subscription.description }}</p>
                             </div>
                         </td>
@@ -79,53 +79,63 @@ const isFormVisible = ref(false); // To track visibility of the form
 const store = useSubscriptionStore();
 const newSubscription = ref<ISubscription | null>({
     id: '',
-  name: '',
-  description: '',
-  price: 0,
-  dueDate: new Date(),
-  currency: ''
+    userId: '',
+    name: '',
+    description: '',
+    price: 0,
+    currency: '',
+    startDate: new Date(),
+    interval: 0
 } as ISubscription);
 
 const subscriptions = ref<ISubscription[]>([
     {
         id: '1',
+        userId: 'Me',
         name: 'Netflix',
-        price: 15.99,
-        dueDate: new Date('2025-05-05'),
         description: 'Streaming service for movies and TV shows.',
-        currency: 'USD'
+        price: 15.99,
+        currency: 'USD',
+        startDate: new Date('2025-05-05'),
+        interval: 1/12
     },
     {
         id: '2',
+        userId: 'MeAgain',
         name: 'Spotify',
-        price: 9.99,
-        dueDate: new Date('2025-05-05'),
         description: 'Music streaming service with premium features.',
-        currency: 'USD'
+        price: 9.99,
+        currency: 'USD',
+        startDate: new Date('2025-05-05'),
+        interval: 4/2
     },
     {
         id: '3',
+        userId: 'MeAgain',
         name: 'Amazon Prime',
-        price: 12.99,
-        dueDate: new Date('2025-05-05'),
         description: 'Amazon’s subscription service for free shipping and streaming.',
-        currency: 'USD'
+        price: 12.99,
+        currency: 'USD',
+        startDate: new Date('2025-05-05'),
+        interval: 4/2,
     }
 ]);
 
 const addNewSubscription = async () => {
-    if (!newSubscription.value?.name || !newSubscription.value?.price || !newSubscription.value?.dueDate) return;
+    if (!newSubscription.value?.name || !newSubscription.value?.price || !newSubscription.value?.startDate) return;
 
     await store.addSubscription(newSubscription.value);
 
     // Reset the form
     newSubscription.value = {
         id: '',
+        userId: '',
         name: '',
         description: '',
         price: 0,
-        dueDate: new Date(),
-        currency: ''
+        currency: '',
+        startDate: new Date(),
+        interval: 0
     } as ISubscription;
 };
 const toggleForm = () => {

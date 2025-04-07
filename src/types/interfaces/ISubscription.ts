@@ -1,8 +1,10 @@
 export interface ISubscription {
     id: string;
+    userId: string;
     name: string;
     description: string;
     price: number;
-    dueDate: Date;
     currency: string;
+    startDate: Date;
+    interval: number;
 }

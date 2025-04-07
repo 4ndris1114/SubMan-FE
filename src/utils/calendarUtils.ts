@@ -20,7 +20,7 @@ export function getCalendarForMonth(payments: ISubscription[]) {
 
     // Map each payment to its corresponding day
     payments.forEach((payment) => {
-        const paymentDate = new Date(payment.dueDate);
+        const paymentDate = new Date(payment.startDate);
         if (paymentDate.getMonth() === month && paymentDate.getFullYear() === year) {
             const day = paymentDate.getDate();
             // Add the payment to the corresponding day in the calendar
