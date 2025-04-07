@@ -4,6 +4,7 @@ import '@/assets/css/main.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useUserStore } from './stores/userStore';
 
 import App from './App.vue';
 import router from './router'; // Import the router
@@ -17,5 +18,7 @@ library.add(fas);
 app.component('fa', FontAwesomeIcon);
 
 app.use(createPinia());
+const userStore = useUserStore();
+await userStore.initAuth();
 app.use(router);
 app.mount('#app');
