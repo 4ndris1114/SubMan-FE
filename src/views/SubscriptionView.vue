@@ -17,7 +17,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input v-model="newSubscription!.name" type="text" placeholder="Name" class="border p-2 rounded" required />
             <input v-model="newSubscription!.description" type="text" placeholder="Description" class="border p-2 rounded" required />
-            <input v-model.number="newSubscription!.price" type="number" placeholder="Price" class="border p-2 rounded" required />
+            <input v-model.number="newSubscription!.price" type="number" step="0.01" placeholder="Price" class="border p-2 rounded" required />
             
             <!-- Use formattedStartDate for v-model binding -->
             <input v-model="formattedStartDate" type="date" class="border p-2 rounded" required />
@@ -70,14 +70,16 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import Navbar from '@/components/Navbar.vue';
   import { useSubscriptionStore } from '@/stores/subscriptionStore';
   import type { ISubscription } from '@/types/interfaces/ISubscription';
+import { useUserStore } from '@/stores/userStore';
   
   const isFormVisible = ref(false); // To track visibility of the form
   
-  const store = useSubscriptionStore();
+  const subscriptionStore = useSubscriptionStore();
+  const userStore = useUserStore();
   const newSubscription = ref<ISubscription | null>({
     id: '',
     userId: '', // You can set userId dynamically
@@ -89,48 +91,22 @@
     currency: ''
   } as ISubscription);
   
-  const subscriptions = ref<ISubscription[]>([
-    {
-      id: '1',
-      userId: 'user1',
-      name: 'Netflix',
-      price: 15.99,
-      startDate: new Date('2025-05-05'),
-      interval: 1,
-      description: 'Streaming service for movies and TV shows.',
-      currency: 'USD'
-    },
-    {
-      id: '2',
-      userId: 'user1',
-      name: 'Spotify',
-      price: 9.99,
-      startDate: new Date('2025-05-05'),
-      interval: 1,
-      description: 'Music streaming service with premium features.',
-      currency: 'USD'
-    },
-    {
-      id: '3',
-      userId: 'user1',
-      name: 'Amazon Prime',
-      price: 12.99,
-      startDate: new Date('2025-05-05'),
-      interval: 1,
-      description: 'Amazon’s subscription service for free shipping and streaming.',
-      currency: 'USD'
-    }
-  ]);
+  const subscriptions = computed(() => subscriptionStore.subscriptions);
+
+  onMounted(async () => {
+    await subscriptionStore.getAllSubscriptions(userStore.loggedInUser!.id);
+  })
   
   const addNewSubscription = async () => {
+
     if (!newSubscription.value?.name || !newSubscription.value?.price || !newSubscription.value?.startDate) return;
-  
-    await store.addSubscription(newSubscription.value);
+    newSubscription.value.userId = userStore.loggedInUser!.id;
+    await subscriptionStore.addSubscription(newSubscription.value);
   
     // Reset the form
     newSubscription.value = {
       id: '',
-      userId: '', // Set dynamic userId if needed
+      userId: '', 
       name: '',
       description: '',
       price: 0,
@@ -175,6 +151,7 @@
   
   // Utility function to format the date for display
   const formatDate = (date: Date) => {
+    console.log(date);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
