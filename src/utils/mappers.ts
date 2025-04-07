@@ -13,12 +13,12 @@ export const mapToIUser = (user: any): IUser => {
 export const mapToISubscription = (subscription: any): ISubscription => {
     return {
         id: subscription.id,
+        userId: subscription.userId,
         name: subscription.name,
         description: subscription.description,
         price: subscription.price,
-        dueDate: new Date(subscription.dueDate),
-        currency: subscription.currency
+        currency: subscription.currency,
+        startDate: new Date(subscription.startDate),
+        interval: subscription.interval
     };
 };
-
-

@@ -4,7 +4,9 @@
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <!-- Logo -->
             <nav class="text-2xl font-bold text-white">
-                <router-link to="/" class="text-white">SubMan</router-link>
+                <fa icon="otter" class="text-3 xl text-black" />
+                <router-link to="/" class="ml-2 subman-text">
+                    SubMan</router-link>
             </nav>
 
             <!-- Navigation -->
@@ -37,5 +39,9 @@
 
 <script setup lang="ts">
 </script>
-
-<style scoped></style>
+<style scoped>
+.subman-text {
+    color: black;
+    -webkit-text-stroke: 0.5px white; /* stroke width and color */
+}
+</style>

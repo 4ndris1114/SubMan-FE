@@ -42,13 +42,6 @@ export class UserService {
         id: user._id,
         username: user.username,
         email: user.email,
-        profilePicture: user.profilePicture,
-        bio: user.bio,
-        bookshelves: user.bookshelves,
-        readingProgress: user.readingProgress,
-        followers: user.followers,
-        following: user.following,
-        readingStats: user.readingStats,
         createdAt: user.createdAt,
       } as IUser;
     }

@@ -39,8 +39,8 @@ const calendarDays = ref<Array<{ date: number; payments: ISubscription[] }>>([])
 
 onMounted(async () => {
     try {
-        const payments = await subscriptionStore.fetchUpcomingPayments(); // Fetch upcoming payments from backend
-        calendarDays.value = getCalendarForMonth(payments); // Generate calendar with payment data
+        const payments = await subscriptionStore.getUpcomingPayments(); // Fetch upcoming payments
+        calendarDays.value = getCalendarForMonth(payments);  // Generate calendar with payment data
     } catch (err) {
         error.value = 'Failed to load calendar data';
     }

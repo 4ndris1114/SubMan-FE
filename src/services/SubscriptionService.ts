@@ -40,16 +40,19 @@ export class SubscriptionService {
     }
 
     async addSubscription(subscription: ISubscription) {
-    try {
-      const response = await instance.post(`/subscription/${userId}`, newSubscription);
-      if (response.status == 201) {
-        return mapToISubscription(response.data);
-      } else {
-        throw new Error('Failed to create subscription');
+        try {
+            console.log(subscription);
+          const response = await httpClient.post(`/subscription`, subscription);
+          console.log(response);
+          
+          if (response.status === 201) {
+            return mapToISubscription(response.data); // Assuming you want to map it to ISubscription
+          } else {
+            throw new Error('Failed to create subscription');
+          }
+        } catch (error) {
+          console.error('Error creating subscription:', error);
+          throw error;
+        }
       }
-    } catch (error) {
-      console.error('Error creating subscription:', error);
-      throw error;
     }
-  }
-}

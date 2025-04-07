@@ -17,7 +17,7 @@ export function getCalendarForMonth(payments: ISubscription[]) {
         date: index + 1,
         payments: []
     }));
-
+      
     // Map each payment to its corresponding day
     payments.forEach((payment) => {
         const paymentDate = new Date(payment.startDate);
