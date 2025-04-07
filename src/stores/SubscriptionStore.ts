@@ -18,32 +18,32 @@ export const useSubscriptionStore = defineStore("subscription", {
         isLoading: (state) => state.loading
     },
         actions: {
-    async getAllSubscriptions() {
+    async getAllSubscriptions(userId: string) {
         try {
             this.loading = true;
-            this.subscriptions = await this.service.getAllSubscriptions();
+            this.subscriptions = await this.service.getAllSubscriptions(userId);
         } catch (error) {
             console.error("Error fetching subscriptions:", error);
         } finally {
             this.loading = false;
         }
     },
-    async getUpcomingPayments() {
-        try {
-            this.loading = true;
-            // Assuming you're getting all subscriptions and filtering by date
-            const allSubscriptions = await this.service.getAllSubscriptions();
-            const upcomingPayments = allSubscriptions.filter((subscription) => {
-                const currentDate = new Date();
-                return new Date(subscription.startDate) >= currentDate; // You can change this filter as needed
-            });
-            return upcomingPayments;
-        } catch (error) {
-            console.error("Error fetching upcoming payments:", error);
-        } finally {
-            this.loading = false;
-        }
-    },
+    // async getUpcomingPayments() {
+    //     try {
+    //         this.loading = true;
+    //         // Assuming you're getting all subscriptions and filtering by date
+    //         const allSubscriptions = await this.service.getAllSubscriptions();
+    //         const upcomingPayments = allSubscriptions.filter((subscription) => {
+    //             const currentDate = new Date();
+    //             return new Date(subscription.startDate) >= currentDate; // You can change this filter as needed
+    //         });
+    //         return upcomingPayments;
+    //     } catch (error) {
+    //         console.error("Error fetching upcoming payments:", error);
+    //     } finally {
+    //         this.loading = false;
+    //     }
+    // },
 
     async getSubscriptionById(id: number) {
         try {

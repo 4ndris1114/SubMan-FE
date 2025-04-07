@@ -3,12 +3,13 @@ import type {ISubscription} from "@/types/interfaces/ISubscription";
 import {mapToISubscription} from "@/utils/mappers";
 
 export class SubscriptionService {
-    async getAllSubscriptions(){
+    async getAllSubscriptions(userId: string) {
         let attempts = 0;
         const maxAttempts = 5;
         while (attempts < maxAttempts) {
             try {
-                const response = await httpClient.get<ISubscription[]>("/subscriptions");
+                const response = await httpClient.get<ISubscription[]>(`/subscription/user/${userId}`);
+                console.log(response.data);
                 return response.data;
             } catch (error: any) {
                 console.error("Error fetching subscriptions:", error);
@@ -26,7 +27,7 @@ export class SubscriptionService {
         const maxAttempts = 5;
         while (attempts < maxAttempts) {
             try {
-                const response = await httpClient.get<ISubscription>(`/subscriptions/${id}`);
+                const response = await httpClient.get<ISubscription>(`/subscription/${id}`);
                 return response.data;
             } catch (error: any) {
                 console.error("Error fetching subscription:", error);
