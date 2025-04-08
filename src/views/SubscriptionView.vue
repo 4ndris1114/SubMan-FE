@@ -115,7 +115,7 @@
             </tr>
 
             <tr v-if="selectedSubscription === subscription">
-              <td colspan="4" class="py-4 px-4">
+              <td colspan="4" class="py-4 px-4 border-x-1 border-gray-200">
                 <div class="w-full">
                   <p><strong>Amount to Pay:</strong> ${{ subscription.price }}</p>
                   <p><strong>Start Date:</strong> {{ formatDate(subscription.startDate) }}</p>
@@ -123,7 +123,7 @@
                 </div>
               </td>
             </tr>
-            <div class="z-20">
+            <div class="">
               <DeleteSubscriptionModal v-if="showDeleteModal" @confirm="confirmDelete" @cancel="showDeleteModal = false" />
             </div>
           </template>
