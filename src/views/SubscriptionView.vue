@@ -88,7 +88,7 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
-            <tr class="group hover:bg-purple-100 bg-purple-50 transition-colors duration-200">
+            <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 bg-purple-50 transition-colors duration-200 cursor-pointer">
               <td class="py-2 px-4 font-semibold">{{ subscription.name }}</td>
               <td class="py-2 px-4">${{ subscription.price }}</td>
               <td class="py-2 px-4">
@@ -96,15 +96,15 @@
               </td>
 
               <td class="py-2 px-4">
-                <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500">
+                <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500 cursor-pointer">
                   <fa icon="edit" class="scale-140 text-purple" />
                 </button>
-                <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500">
+                <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500 cursor-pointer">
                   <fa icon="trash" class="scale-140 text-red" />
                 </button>
-                <button @click="toggleDetails(subscription)" class="ml-10 text-purple-700 hover:text-purple-500">
-                  <fa v-if="selectedSubscription !== subscription" icon="sort-down" class="scale-140 text-purple" />
-                  <fa v-else icon="sort-up" class="scale-140 text-purple-500" />
+                <button class="ml-10 text-purple-700 hover:text-purple-500 cursor-pointer">
+                  <fa v-if="selectedSubscription !== subscription" icon="chevron-down" class="scale-140 text-purple" />
+                  <fa v-else icon="chevron-up" class="scale-140 text-purple-500" />
                 </button>
               </td>
             </tr>
@@ -117,16 +117,6 @@
                     <p><strong>Start Date:</strong> {{ formatDate(subscription.startDate) }}</p>
                     <p><strong>Description:</strong> {{ subscription.description }}</p>
                   </div>
-                </div>
-              </td>
-            </tr>
-
-            <tr v-if="selectedSubscription === subscription">
-              <td colspan="4" class="py-4 px-4 border-x-1 border-gray-200">
-                <div class="w-full">
-                  <p><strong>Amount to Pay:</strong> ${{ subscription.price }}</p>
-                  <p><strong>Start Date:</strong> {{ formatDate(subscription.startDate) }}</p>
-                  <p><strong>Description:</strong> {{ subscription.description }}</p>
                 </div>
               </td>
             </tr>
