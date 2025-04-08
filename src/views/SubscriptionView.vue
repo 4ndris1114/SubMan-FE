@@ -164,7 +164,14 @@ const newSubscription = ref<ISubscription | null>({
   currency: 'EUR'
 } as ISubscription);
 
-const subscriptions = computed(() => subscriptionStore.subscriptions);
+const subscriptions = computed(() => {
+  return subscriptionStore.subscriptions.sort((a, b) => {
+    const nextPaymentDateA = getNextPaymentDate(a.startDate, a.interval);
+    const nextPaymentDateB = getNextPaymentDate(b.startDate, b.interval);
+    return nextPaymentDateA.getTime() - nextPaymentDateB.getTime();
+  });
+});
+
 
 const showDeleteModal = ref(false)
 const subscriptionToDelete = ref<ISubscription | null>(null)
