@@ -17,8 +17,6 @@
                 </router-link>
             </nav>
 
-            <Searchbar />
-
             <!-- User actions -->
             <div class="flex items-center gap-6">
                 <button class="relative rounded-full cursor-pointer text-white">
