@@ -185,6 +185,21 @@ onMounted(async () => {
   await subscriptionStore.getAllSubscriptions(userStore.loggedInUser!.id);
 })
 
+function getNextPaymentDate(startDate: string | Date, interval: number): Date {
+  const start = new Date(startDate);
+  const now = new Date();
+
+  let nextPayment = new Date(start);
+
+  // Keep adding the interval until we get a date in the future
+  while (nextPayment < now) {
+    nextPayment.setDate(nextPayment.getDate() + interval);
+  }
+
+  return nextPayment;
+}
+
+
 const addNewSubscription = async () => {
   
   if (!newSubscription.value?.name || !newSubscription.value?.startDate) return;
