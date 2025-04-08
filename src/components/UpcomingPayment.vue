@@ -1,7 +1,7 @@
 <template>
-    <div class="flex justify-between bg-gray-300 items-start mx-20 ">
+    <div class="flex justify-between bg-gray-300 overflow-x-hidden w-full min-h-screen items-start ">
         <!-- Left Section: Welcome Text -->
-        <div class="flex-1 mt-30">
+        <div class="flex-1  ml-20 mt-30">
             <h1 class="text-4xl font-extrabold text-left mb-4">
                 Welcome back, {{ userStore.loggedInUser?.username }}!
             </h1>
@@ -11,14 +11,14 @@
 
             <div class="flex justify-center gap-4 flex-wrap ">
                 <!-- Graph Placeholder -->
-                <div class="flex flex-col items-center p-4 shadow-xl rounded-2xl mb-2 w-full max-w-md">
+                <div class="flex flex-col items-center p-4 bg-gray-100 shadow-xl rounded-2xl w-full max-w-md">
                     <h2 class="text-2xl text-center font-medium mb-4">
                         Money spent in {{ currentMonthName }}
                     </h2>
-                    <!--placeholder for graph-->
+                    <MoneySpentChart :currentMonth="currentMonth" :currentYear="currentYear" />
                 </div>
                 <!-- Calendar Wrapper -->
-                <div class="flex justify-center items-center p-4 shadow-xl rounded-2xl">
+                <div class="flex justify-center bg-gray-100 items-center p-4 shadow-xl rounded-2xl">
 
                     <div>
                         <!-- Month Navigation -->
@@ -27,9 +27,9 @@
                         </h2>
                         <div class="flex justify-between items-center mb-2">
 
-                            <button @click="prevMonth" class="text-xl font-extrabold hover:text-blue-600">&lt;</button>
+                            <button @click="prevMonth" class="text-xl font-extrabold hover:text-purple-600">&lt;</button>
                             <h3 class="text-xl font-bold">{{ currentMonthName }} {{ currentYear }}</h3>
-                            <button @click="nextMonth" class="text-xl font-extrabold hover:text-blue-600">&gt;</button>
+                            <button @click="nextMonth" class="text-xl font-extrabold hover:text-purple-600">&gt;</button>
                         </div>
 
                         <!-- Weekdays -->
@@ -49,7 +49,7 @@
                                 <div v-if="day.date"
                                     class="h-10 w-10 flex flex-col items-center justify-center relative rounded-lg text-[14px] transition-all duration-300"
                                     :class="{
-                                        'border-red-800 border-2 bg-red-600 hover:bg-red-500': day.payments.length && isPast(day.date),
+                                        'border-red-700 border-2 bg-red-500 hover:bg-red-600': day.payments.length && isPast(day.date),
                                         'border-blue-800 border-2 bg-blue-600 hover:bg-blue-500': day.payments.length && !isPast(day.date),
                                         'border-blue-600 border-4 hover:bg-blue-400': isToday(day.date) && !day.payments.length,
                                         'hover:bg-blue-100': !isToday(day.date) && !day.payments.length,
@@ -76,11 +76,13 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUserStore } from '@/stores/userStore';
 import type { ISubscription } from '@/types/interfaces/ISubscription';
 import { getCalendarForMonth } from '@/utils/calendarUtils.ts';
+import MoneySpentChart from '@/components/MoneySpentChart.vue';
 
 const subscriptionStore = useSubscriptionStore();
 const userStore = useUserStore();
 const error = ref<string | null>(null);
-const calendarDays = ref<Array<{ date: number; payments: ISubscription[] }>>([]);
+const calendar = ref<Array<{ date: number; payments: ISubscription[] }>>([]);
+const calendarDays = computed(() => calendar.value);
 
 const subscriptions = computed(() => subscriptionStore.subscriptions);
 
@@ -99,7 +101,7 @@ const currentMonthName = computed(() =>
 );
 
 const loadCalendar = () => {
-    calendarDays.value = getCalendarForMonth(subscriptions.value, currentMonth.value, currentYear.value);
+    calendar.value = getCalendarForMonth(subscriptions.value, currentMonth.value, currentYear.value);
 };
 
 const prevMonth = () => {
@@ -133,7 +135,7 @@ onMounted(async () => {
 
 const isToday = (dayDate: number) => {
     const currentDay = today.getDate();
-    return dayDate === currentDay;
+    return dayDate === currentDay && currentMonth.value === today.getMonth() && currentYear.value === today.getFullYear();
 };
 
 onMounted(async () => {
@@ -149,9 +151,12 @@ const paymentsThisWeek = computed(() => {
     const now = new Date();
     const startOfWeek = new Date(now);
     startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday
+    startOfWeek.setHours(0, 0, 0, 0);
 
     const endOfWeek = new Date(now);
     endOfWeek.setDate(now.getDate() - now.getDay() + 7); // Sunday
+    endOfWeek.setHours(23, 59, 59, 999);
+
 
     let count = 0;
 
@@ -161,7 +166,6 @@ const paymentsThisWeek = computed(() => {
             count++;
         }
     });
-
     return count;
 });
 
