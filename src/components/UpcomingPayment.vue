@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUserStore } from '@/stores/userStore';
 import type { ISubscription } from '@/types/interfaces/ISubscription';
@@ -132,6 +132,21 @@ onMounted(async () => {
         error.value = 'Failed to load calendar data';
     }
 });
+
+watch(
+  () => userStore.loggedInUser,
+  async (newUser, oldUser) => {
+    if (newUser && newUser.id !== oldUser?.id) {
+      try {
+        await subscriptionStore.getAllSubscriptions(newUser.id);
+        loadCalendar();
+      } catch (err) {
+        error.value = 'Failed to reload calendar data';
+      }
+    }
+  },
+  { immediate: false }
+);
 
 const isToday = (dayDate: number) => {
     const currentDay = today.getDate();

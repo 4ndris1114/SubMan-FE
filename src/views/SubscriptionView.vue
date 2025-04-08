@@ -92,8 +92,8 @@
               <td class="py-2 px-4 font-semibold">{{ subscription.name }}</td>
               <td class="py-2 px-4">${{ subscription.price }}</td>
               <td class="py-2 px-4">
-  {{ formatDate(getNextPaymentDate(subscription.startDate, subscription.interval)) }}
-</td>
+                {{ formatDate(getNextPaymentDate(subscription.startDate, subscription.interval)) }}
+              </td>
 
               <td class="py-2 px-4">
                 <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500">
