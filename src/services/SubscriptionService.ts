@@ -70,11 +70,11 @@ export class SubscriptionService {
         }
     }
 
-    async deleteSubscription(subscription: ISubscription) {
+    async deleteSubscription(subscriptionId: string) {
         try {
             const response = await httpClient.delete(`/subscription/${subscriptionId}`);
 
-            if (response.status === 200) {
+            if (response.status === 204) {
                 return true; // Successfully deleted
             } else {
                 throw new Error('Failed to delete subscription');

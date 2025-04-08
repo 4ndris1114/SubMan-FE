@@ -5,7 +5,8 @@
 
     <!-- Add Subscription Button -->
     <div class="flex justify-end p-4">
-      <button @click="toggleForm" class="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-600">
+      <button @click="toggleForm" class="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-600 cursor-pointer">
+        <fa icon="plus" class="mr-2" />
         Add Subscription
       </button>
     </div>
@@ -57,9 +58,16 @@
 
         </div>
 
-        <button type="submit" class="mt-4 bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-500">
-  {{ newSubscription.id ? 'Save Changes' : 'Add Subscription' }}
-</button>
+        <div class="flex justify-end">
+          <button type="submit" class="mt-4 bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-500 cursor-pointer">
+            {{ newSubscription!.id ? 'Save Changes' : 'Add Subscription' }}
+          </button>
+
+          <button @click="toggleForm" type="button"
+            class="mt-4 ml-4 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 cursor-pointer">
+            Cancel
+          </button>
+        </div>
 
       </form>
     </div>
@@ -85,13 +93,13 @@
                 1000))) }}
               </td>
               <td class="py-2 px-4">
-                <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500">
+                <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500 cursor-pointer">
                   <fa icon="edit" class="scale-140 text-purple" />
                 </button>
-                <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500">
+                <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500 cursor-pointer">
                   <fa icon="trash" class="scale-140 text-red" />
                 </button>
-                <button @click="toggleDetails(subscription)" class="ml-10 text-purple-700 hover:text-purple-500">
+                <button @click="toggleDetails(subscription)" class="ml-10 text-purple-700 hover:text-purple-500 cursor-pointer">
                   <fa v-if="selectedSubscription !== subscription" icon="sort-down" class="scale-140 text-purple" />
                   <fa v-else icon="sort-up" class="scale-140 text-purple-500" />
                 </button>
