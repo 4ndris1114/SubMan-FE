@@ -88,27 +88,34 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
-            <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 transition-colors duration-200 cursor-pointer">
-              <td class="w-1/4 py-2 px-4 font-semibold">{{ subscription.name }}</td>
-              <td class="w-1/4 py-2 px-4">{{ subscription.price }} {{ subscription.currency === 'HUF' ? 'Ft' : subscription.currency === 'DKK' ? 'kr' : subscription.currency  === 'EUR' ? '€' : '$' }}</td>
-              <td class="w-1/4 py-2 px-4">
-                {{ formatDate(new Date(subscription.startDate.getTime() + (subscription.interval * 30 * 24 * 60 * 60 * 1000))) }}
+            <tr class="group hover:bg-purple-100 bg-purple-50 transition-colors duration-200">
+              <td class="py-2 px-4 font-semibold">{{ subscription.name }}</td>
+              <td class="py-2 px-4">${{ subscription.price }}</td>
+              <td class="py-2 px-4">
+  {{ formatDate(getNextPaymentDate(subscription.startDate, subscription.interval)) }}
+</td>
+
+              <td class="py-2 px-4">
+                <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500">
+                  <fa icon="edit" class="scale-140 text-purple" />
+                </button>
+                <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500">
+                  <fa icon="trash" class="scale-140 text-red" />
+                </button>
+                <button @click="toggleDetails(subscription)" class="ml-10 text-purple-700 hover:text-purple-500">
+                  <fa v-if="selectedSubscription !== subscription" icon="sort-down" class="scale-140 text-purple" />
+                  <fa v-else icon="sort-up" class="scale-140 text-purple-500" />
+                </button>
               </td>
-              <td class="w-1/4 py-2 px-4">
-                <div class="flex flex-row align-baseline justify-between">
-                  <div>
-                    <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500 cursor-pointer">
-                      <fa icon="edit" class="scale-140 text-purple" />
-                    </button>
-                    <button @click="deleteSubscription(subscription)" class="ml-8 text-red-700 hover:text-red-500 cursor-pointer">
-                      <fa icon="trash" class="scale-140 text-red" />
-                    </button>
-                  </div>
-                  <div>
-                    <button @click="toggleDetails(subscription)" class="ml-10 text-purple-700 hover:text-purple-500 cursor-pointer">
-                      <fa v-if="selectedSubscription !== subscription" icon="chevron-down" class="scale-140 text-purple" />
-                      <fa v-else icon="chevron-up" class="scale-140 text-purple-500" />
-                    </button>
+            </tr>
+
+            <tr v-if="selectedSubscription === subscription">
+              <td :colspan="4" class="py-4 px-4">
+                <div class="">
+                  <div class="w-full">
+                    <p><strong>Amount to Pay:</strong> ${{ subscription.price }}</p>
+                    <p><strong>Start Date:</strong> {{ formatDate(subscription.startDate) }}</p>
+                    <p><strong>Description:</strong> {{ subscription.description }}</p>
                   </div>
                 </div>
               </td>
