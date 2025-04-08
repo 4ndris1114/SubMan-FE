@@ -15,7 +15,8 @@
                     <h2 class="text-2xl text-center font-medium mb-4">
                         Money spent in {{ currentMonthName }}
                     </h2>
-                    <MoneySpentChart :currentMonth="currentMonth" :currentYear="currentYear" />
+                    <!-- <MoneySpentChart :currentMonth="currentMonth" :currentYear="currentYear" />
+                     -->
                 </div>
                 <!-- Calendar Wrapper -->
                 <div class="flex justify-center bg-gray-100 items-center p-4 shadow-xl rounded-2xl">
@@ -141,7 +142,7 @@ const isToday = (dayDate: number) => {
 onMounted(async () => {
     try {
         await subscriptionStore.getAllSubscriptions(userStore.loggedInUser!.id);
-        calendarDays.value = getCalendarForMonth(subscriptions.value);
+        calendarDays.value = getCalendarForMonth(subscriptions.value, currentMonth.value, currentYear.value);
     } catch (err) {
         error.value = 'Failed to load calendar data';
     }

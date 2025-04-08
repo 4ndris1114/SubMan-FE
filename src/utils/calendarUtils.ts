@@ -5,7 +5,7 @@ export function getCalendarForMonth(payments: ISubscription[], month: number, ye
 
     // Get the first day of the month
     const firstDayOfMonth = new Date(year, month, 1);
-    const firstDay = firstDayOfMonth.getDay() - 1;
+    const firstDay = (firstDayOfMonth.getDay() + 6) % 7; // Adjust so Monday = 0, Sunday = 6
 
     // Get the number of days in the current month
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -13,50 +13,43 @@ export function getCalendarForMonth(payments: ISubscription[], month: number, ye
     // Initialize an array of days
     const calendarDays = Array.from({ length: daysInMonth }, (_, index) => ({
         date: index + 1,
-        payments: []
+        payments: [] as ISubscription[],
     }));
-      
-// Map each payment to its corresponding day
-payments.forEach((payment) => {
-    const startDate = new Date(payment.startDate);
-    const interval = payment.interval; // Assume interval is in days
-    let paymentDate = new Date(startDate);
 
-    // Only start adding payments if the paymentDate is after today
-    if (paymentDate < new Date()) {
-        // Skip payments that are before the current date
-        paymentDate = new Date(new Date().setDate(new Date().getDate() + 1)); // Start from tomorrow
-    }
+    // Map each payment to its corresponding day
+    payments.forEach((payment) => {
+        const startDate = new Date(payment.startDate);
+        const interval = payment.interval; // in days
+        const targetYear = year;
+        const targetMonth = month; // 0-based
 
-    // Loop to add future payments only, based on the interval
-    while (paymentDate <= new Date('2028-12-31')) { // End the loop after a reasonable date far into the future
-        // Check if paymentDate is within the target month (or future months)
-        if (paymentDate.getFullYear() > year || 
-            (paymentDate.getFullYear() === year && paymentDate.getMonth() >= month)) {
+        let paymentDate = new Date(startDate);
 
-            const day = paymentDate.getDate();
-
-            // Initialize the day in the calendar if not already initialized
-            if (!calendarDays[day - 1]) {
-                calendarDays[day - 1] = { date: day, payments: [] };
-            }
-
-            // Add the payment to the corresponding day
-            calendarDays[day - 1].payments.push(payment);
+        // Keep adding intervals until we reach or pass the target month
+        while (
+            paymentDate.getFullYear() < targetYear ||
+            (paymentDate.getFullYear() === targetYear && paymentDate.getMonth() < targetMonth)
+        ) {
+            paymentDate.setDate(paymentDate.getDate() + interval);
         }
 
-        // Increment the payment date by the interval (in days)
-        paymentDate.setDate(paymentDate.getDate() + interval);
-    }
-});
-
-
-
+        // If payment falls within the target month/year
+        if (
+            paymentDate.getFullYear() === targetYear &&
+            paymentDate.getMonth() === targetMonth
+        ) {
+            const day = paymentDate.getDate();
+            const dayIndex = day - 1;
+            if (dayIndex >= 0 && dayIndex < calendarDays.length) {
+                calendarDays[dayIndex].payments.push(payment);
+            }
+        }
+    });
 
     // Add empty days before the first day of the month
     const paddingDays = Array.from({ length: firstDay }, () => ({
         date: null,
-        payments: []
+        payments: [] as ISubscription[],
     }));
 
     return [...paddingDays, ...calendarDays];
