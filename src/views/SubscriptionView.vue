@@ -88,7 +88,7 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
-            <tr class="group hover:bg-purple-100 transition-colors duration-200">
+            <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 transition-colors duration-200 cursor-pointer">
               <td class="w-1/4 py-2 px-4 font-semibold">{{ subscription.name }}</td>
               <td class="w-1/4 py-2 px-4">${{ subscription.price }}</td>
               <td class="w-1/4 py-2 px-4">
@@ -140,8 +140,6 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import type { ISubscription } from '@/types/interfaces/ISubscription';
 import { useUserStore } from '@/stores/userStore';
 import DeleteSubscriptionModal from '@/components/DeleteSubscriptionModal.vue';
-
-
 
 const isFormVisible = ref(false); // To track visibility of the form
 const selectedSubscription = ref<ISubscription | null>()
@@ -210,9 +208,19 @@ const addNewSubscription = async () => {
 
 const toggleForm = () => {
   isFormVisible.value = !isFormVisible.value;
+  if (!isFormVisible.value) {
+    newSubscription.value = {
+      id: '',
+      userId: '',
+      name: '',
+      description: '',
+      price: 0,
+      startDate: new Date(),
+      interval: 1,
+      currency: ''
+    } as ISubscription;
+  }
 };
-
-const openIndexes = ref<number[]>([]);
 
 const toggleDetails = (subscription: ISubscription) => {
   if (selectedSubscription.value === subscription) {
