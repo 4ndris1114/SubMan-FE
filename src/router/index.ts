@@ -8,11 +8,11 @@ const router = createRouter({
   {
     path: '/',
     name: 'Home',
-    component: HomeView,
+    component: () => import('../views/HomeView.vue'),
     beforeEnter: async (to, from, next) => {
       const userStore = useUserStore()
       if (!userStore.isAuthenticated) {
-        next({ name: 'auth' })
+        next({ name: 'Auth' })
       } else {
         next()
       }
@@ -25,7 +25,7 @@ const router = createRouter({
     beforeEnter: async (to, from, next) => {
       const userStore = useUserStore()
       if (!userStore.isAuthenticated) {
-        next({ name: 'auth' })
+        next({ name: 'Auth' })
       } else {
         next()
       }
@@ -33,12 +33,12 @@ const router = createRouter({
   },
   {
     path: '/login',
-    name: 'auth',
+    name: 'Auth',
     component: () => import('../views/AuthView.vue'),
     beforeEnter: async (to, from, next) => {
       const userStore = useUserStore()
       if (userStore.isAuthenticated) {
-        next({ name: 'home' })
+        next({ name: 'Home' })
       } else {
         next()
       }
