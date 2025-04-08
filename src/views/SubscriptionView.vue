@@ -81,9 +81,9 @@
               <td class="py-2 px-4 font-semibold">{{ subscription.name }}</td>
               <td class="py-2 px-4">${{ subscription.price }}</td>
               <td class="py-2 px-4">
-                {{ formatDate(new Date(subscription.startDate.getTime() + (subscription.interval * 30 * 24 * 60 * 60 *
-                1000))) }}
-              </td>
+  {{ formatDate(getNextPaymentDate(subscription.startDate, subscription.interval)) }}
+</td>
+
               <td class="py-2 px-4">
                 <button @click="editSubscription(subscription)" class="text-purple-700 hover:text-purple-500">
                   <fa icon="edit" class="scale-140 text-purple" />
@@ -172,6 +172,21 @@ const confirmDelete = async () => {
 onMounted(async () => {
   await subscriptionStore.getAllSubscriptions(userStore.loggedInUser!.id);
 })
+
+function getNextPaymentDate(startDate: string | Date, interval: number): Date {
+  const start = new Date(startDate);
+  const now = new Date();
+
+  let nextPayment = new Date(start);
+
+  // Keep adding the interval until we get a date in the future
+  while (nextPayment < now) {
+    nextPayment.setDate(nextPayment.getDate() + interval);
+  }
+
+  return nextPayment;
+}
+
 
 const addNewSubscription = async () => {
   
