@@ -33,7 +33,7 @@
               <option value="EUR">EUR €</option>
               <option value="DKK">DKK</option>
               <option value="USD">USD $</option>
-              <option value="FT">FT</option>
+              <option value="HUF">FT</option>
             </select>
           </div>
 
@@ -43,8 +43,8 @@
           </div>
 
           <div>
-            <p class="text-sm font-bold mb-2">Interval (Months)</p>
-            <input v-model="newSubscription!.interval" type="number" placeholder="Interval (months)"
+            <p class="text-sm font-bold mb-2">Interval (Days)</p>
+            <input v-model="newSubscription!.interval" type="number" placeholder="Interval (Days)"
               class="border p-2 rounded w-full" required />
           </div>
 
@@ -90,7 +90,7 @@
           <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
             <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 transition-colors duration-200 cursor-pointer">
               <td class="w-1/4 py-2 px-4 font-semibold">{{ subscription.name }}</td>
-              <td class="w-1/4 py-2 px-4">${{ subscription.price }}</td>
+              <td class="w-1/4 py-2 px-4">{{ subscription.currency === 'EUR' ? '€' : subscription.currency === 'USD' ? '$' : '' }} {{ subscription.price }} {{ subscription.currency === 'HUF' ? 'Ft' : subscription.currency === 'DKK' ? 'kr' : '' }}</td>
               <td class="w-1/4 py-2 px-4">
                 {{ formatDate(new Date(subscription.startDate.getTime() + (subscription.interval * 30 * 24 * 60 * 60 * 1000))) }}
               </td>
@@ -152,8 +152,8 @@ const newSubscription = ref<ISubscription | null>({
   description: '',
   price: 0,
   startDate: new Date(),
-  interval: 1, // Default to 1 month
-  currency: ''
+  interval: 30, // Default to 1 month
+  currency: 'EUR'
 } as ISubscription);
 
 const subscriptions = computed(() => subscriptionStore.subscriptions);
@@ -186,7 +186,7 @@ onMounted(async () => {
 
 const addNewSubscription = async () => {
   
-  if (!newSubscription.value?.name || !newSubscription.value?.price || !newSubscription.value?.startDate) return;
+  if (!newSubscription.value?.name || !newSubscription.value?.startDate) return;
   newSubscription.value.userId = userStore.loggedInUser!.id;
   if (newSubscription.value.id) {
     await subscriptionStore.updateSubscription(newSubscription.value); // if editing
@@ -201,8 +201,8 @@ const addNewSubscription = async () => {
     description: '',
     price: 0,
     startDate: new Date(),
-    interval: 1,
-    currency: ''
+    interval: 30,
+    currency: 'EUR'
   } as ISubscription;
 };
 
@@ -216,8 +216,8 @@ const toggleForm = () => {
       description: '',
       price: 0,
       startDate: new Date(),
-      interval: 1,
-      currency: ''
+      interval: 30,
+      currency: 'EUR'
     } as ISubscription;
   }
 };
@@ -256,4 +256,10 @@ const formatDate = (date: Date) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
