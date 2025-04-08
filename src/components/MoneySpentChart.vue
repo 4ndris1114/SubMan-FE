@@ -1,44 +1,71 @@
 <template>
-    <div class="w-[400px] h-[300px] shadow-xl rounded-2xl p-4">
-      <h3 class="text-center font-semibold mb-2">
-        Money Spent in {{ new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' }) }}
-      </h3>
-      <ResponsiveContainer width="100%" height="85%">
-        <LineChart :data="data">
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="day" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="total" stroke="#3b82f6" stroke-width="3" />
-        </LineChart>
-      </ResponsiveContainer>
+  <div class="flex flex-col gap-6 text-center max-w-xl mx-auto">
+    <!-- Header: Money Spent Per Currency -->
+    <div>
+      <div class="flex flex-col gap-2 text-4xl font-bold text-gray-800">
+        <div v-for="(amount, currency) in moneySpentPerCurrency" :key="currency">
+          {{ amount }}
+          {{ currency === 'HUF' ? 'Ft' : currency === 'DKK' ? 'kr' : currency === 'EUR' ? '€' : '$' }}
+        </div>
+      </div>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-  import { ref, computed } from 'vue';
-  
-  // For testing purposes, simulate random data
-  const currentMonth = 3; // April (0-indexed month)
-  const currentYear = 2025;
-  
-  const data = computed(() => {
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();  // Get total number of days in the month
-    const result = [];
-  
-    for (let day = 1; day <= daysInMonth; day++) {
-      // Simulate random data for daily totals (between 0 and 500)
-      const dayTotal = Math.floor(Math.random() * 500); 
-  
-      result.push({
-        day: day.toString(),
-        total: dayTotal
-      });
+
+    <!-- Breakdown: Subscriptions Paid -->
+    <div class="text-left text-base text-gray-700">
+      <h3 class="font-medium mb-2 text-lg">You paid for:</h3>
+      <ul class="list-disc list-inside space-y-1">
+        <li v-for="(subscription, index) in subscriptions" :key="subscription.id">
+          {{ subscription.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+
+
+<script setup lang="ts">
+import { ISubscription } from '@/types/interfaces/ISubscription';
+import { computed } from 'vue';
+
+const props = defineProps<{
+  subscriptions: ISubscription[];
+  currentMonth: number;
+  currentYear: number;
+}>();
+
+const moneySpentPerCurrency = computed(() => {
+  const result: Record<string, number> = {};
+
+  props.subscriptions.forEach(subscription => {
+    const startDate = new Date(subscription.startDate);
+    const interval = subscription.interval;
+    const currency = subscription.currency;
+
+    let paymentDate = new Date(startDate);
+
+    // Fast-forward to current month
+    while (
+      paymentDate.getFullYear() < props.currentYear ||
+      (paymentDate.getFullYear() === props.currentYear &&
+        paymentDate.getMonth() < props.currentMonth)
+    ) {
+      paymentDate.setDate(paymentDate.getDate() + interval);
     }
-  
-    return result;
+
+    // Check if a payment occurs in the current month
+    if (
+      paymentDate.getFullYear() === props.currentYear &&
+      paymentDate.getMonth() === props.currentMonth
+    ) {
+      if (!result[currency]) result[currency] = 0;
+      result[currency] += subscription.price;
+    }
   });
-  </script>
-  
-  <style scoped></style>  
+
+  return result;
+});
+
+</script>
+
+<style scoped></style>
