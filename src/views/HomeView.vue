@@ -1,9 +1,15 @@
 <template>
-    <TestComponent />
+    <div class="min-h-screen bg-gray-100">
+        <Navbar />
+        <div class="min-h-screen">
+            <UpcomingPayment />
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
-import TestComponent from '@/components/TestComponent.vue'
+import Navbar from '@/components/Navbar.vue'
+import UpcomingPayment from '@/components/UpcomingPayment.vue';
 </script>
 
 <style scoped>

@@ -10,7 +10,11 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "module": "esnext",
-    "target": "esnext"
+    "target": "esnext",
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "declaration":true,
+  
   },
   "include": [
     "src/**/*.ts",
