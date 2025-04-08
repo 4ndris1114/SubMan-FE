@@ -189,7 +189,7 @@ const handleRegister = async () => {
         await userStore.register(username.value, email.value, password.value);
         showNotification('Successfully registered!', 'success');
         emit('signin');
-    } catch (error) {
+    } catch (error: any) {
         if (error.response.data === "Email already exists") {
             emailError.value = error.response.data;
         } else if (error.response.data === "Username already exists") {
