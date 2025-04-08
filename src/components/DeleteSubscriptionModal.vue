@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 bg-black opacity-75 flex items-center justify-center w-full mx-auto z-50">
+    <div class="fixed inset-0 blur-none flex items-center justify-center w-full mx-auto z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm">
         <h2 class="text-xl font-semibold mb-4">Delete Subscription</h2>
         <p class="mb-6">Are you sure you want to delete this subscription? <br>This action cannot be undone.</p>

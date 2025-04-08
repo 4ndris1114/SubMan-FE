@@ -1,6 +1,6 @@
 <template>
   <Navbar />
-  <div class="min-h-screen bg-gray-50 mt-16" :class="isFormVisible ? 'pt-8' : ''">
+  <div class="min-h-screen bg-gray-50 mt-16" :class="[isFormVisible ? 'pt-8' : '', showDeleteModal ? 'blur-xs' : '']">
 
     <!-- Add Subscription Form -->
     <div v-if="isFormVisible" class="max-w-4xl mx-auto p-4 bg-white shadow rounded-lg">
@@ -124,13 +124,14 @@
               </td>
             </tr>
             <div class="">
-              <DeleteSubscriptionModal v-if="showDeleteModal" @confirm="confirmDelete" @cancel="showDeleteModal = false" />
             </div>
           </template>
         </tbody>
       </table>
     </div>
   </div>
+  <DeleteSubscriptionModal v-if="showDeleteModal" @confirm="confirmDelete" @cancel="showDeleteModal = false" />
+
 </template>
 
 <script setup lang="ts">
