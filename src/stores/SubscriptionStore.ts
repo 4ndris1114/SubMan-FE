@@ -28,6 +28,7 @@ export const useSubscriptionStore = defineStore("subscription", {
             this.loading = false;
         }
     },
+
     // async getUpcomingPayments() {
     //     try {
     //         this.loading = true;
@@ -64,6 +65,24 @@ export const useSubscriptionStore = defineStore("subscription", {
         } catch (error) {
             console.error('Error adding subscription:', error);
         }
-    }
+    },
+
+    async updateSubscription(subscription: ISubscription) {
+        try {
+            const updatedSubscription = await this.service.updateSubscription(subscription);
+            this.subscriptions = this.subscriptions.map(s => s.id === subscription.id ? updatedSubscription : s);
+        } catch (error) {
+            console.error('Error updating subscription:', error);
+        }
+    },
+    
+    async deleteSubscription(subscription: ISubscription) {
+        try {
+            await this.service.deleteSubscription(subscription.id);
+            this.subscriptions = this.subscriptions.filter(s => s.id !== subscription.id);
+        } catch (error) {
+            console.error('Error deleting subscription:', error);
+        }
+    }    
 }
 });
