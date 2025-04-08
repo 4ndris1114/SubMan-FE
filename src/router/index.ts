@@ -8,12 +8,28 @@ const router = createRouter({
   {
     path: '/',
     name: 'Home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: async (to, from, next) => {
+      const userStore = useUserStore()
+      if (!userStore.isAuthenticated) {
+        next({ name: 'auth' })
+      } else {
+        next()
+      }
+    },
   },
   {
     path: '/subscriptions',
     name: 'subscriptions',
     component: () => import('../views/SubscriptionView.vue'),
+    beforeEnter: async (to, from, next) => {
+      const userStore = useUserStore()
+      if (!userStore.isAuthenticated) {
+        next({ name: 'auth' })
+      } else {
+        next()
+      }
+    },
   },
   {
     path: '/login',

@@ -18,7 +18,12 @@ export const useUserStore = defineStore('userStore', {
     async initAuth() {
       if (this.token) {
         try {
-          const decoded = jwtDecode<{ userId: string }>(this.token);
+          const decoded = jwtDecode<{ userId: string, exp: number }>(this.token);
+          if (decoded.exp * 1000 < Date.now()) {
+            console.warn('Token has expired, clearing session');
+            this.clearAuthData();
+            return;
+          }
           this.loggedInUser = await this.getUserById(decoded.userId);
           this.isAuthenticated = true;
         } catch (error) {

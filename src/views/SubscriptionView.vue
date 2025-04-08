@@ -90,7 +90,7 @@
           <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
             <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 transition-colors duration-200 cursor-pointer">
               <td class="w-1/4 py-2 px-4 font-semibold">{{ subscription.name }}</td>
-              <td class="w-1/4 py-2 px-4">{{ subscription.currency === 'EUR' ? '€' : subscription.currency === 'USD' ? '$' : '' }} {{ subscription.price }} {{ subscription.currency === 'HUF' ? 'Ft' : subscription.currency === 'DKK' ? 'kr' : '' }}</td>
+              <td class="w-1/4 py-2 px-4">{{ subscription.price }} {{ subscription.currency === 'HUF' ? 'Ft' : subscription.currency === 'DKK' ? 'kr' : subscription.currency  === 'EUR' ? '€' : '$' }}</td>
               <td class="w-1/4 py-2 px-4">
                 {{ formatDate(new Date(subscription.startDate.getTime() + (subscription.interval * 30 * 24 * 60 * 60 * 1000))) }}
               </td>
