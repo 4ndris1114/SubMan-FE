@@ -137,7 +137,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import Navbar from '@/components/Navbar.vue';
-import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { useSubscriptionStore } from '@/stores/SubscriptionStore';
 import type { ISubscription } from '@/types/interfaces/ISubscription';
 import { useUserStore } from '@/stores/userStore';
 import DeleteSubscriptionModal from '@/components/DeleteSubscriptionModal.vue';
