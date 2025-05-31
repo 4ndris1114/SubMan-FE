@@ -87,7 +87,10 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <template v-for="(subscription, index) in subscriptions" :key="subscription.id">
+          <tr v-if="subscriptions.length === 0" class="text-center">
+            <td colspan="4" class="py-4 px-4 text-gray-500">No subscriptions found.</td>
+          </tr>
+          <template v-else v-for="(subscription, index) in subscriptions" :key="subscription.id">
             <tr @click="toggleDetails(subscription)" class="group hover:bg-purple-100 bg-purple-50 transition-colors duration-200 cursor-pointer">
               <td class="py-2 px-4 font-semibold">{{ subscription.name }}</td>
               <td class="py-2 px-4">${{ subscription.price }}</td>
@@ -210,8 +213,10 @@ const addNewSubscription = async () => {
   newSubscription.value.userId = userStore.loggedInUser!.id;
   if (newSubscription.value.id) {
     await subscriptionStore.updateSubscription(newSubscription.value); // if editing
+    toggleForm();
   } else {
     await subscriptionStore.addSubscription(newSubscription.value); // if adding new
+    toggleForm();
   }
   // Reset the form
   newSubscription.value = {
