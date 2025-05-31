@@ -45,19 +45,35 @@
 
                         <!-- Calendar Days -->
                         <div class="grid grid-cols-7 gap-1">
-                            <div v-for="(day, index) in calendarDays" :key="index">
-                                <div v-if="day.date"
+                            <div
+                                v-for="(day, index) in calendarDays"
+                                :key="index"
+                                class="relative group"
+                            >
+                                <div
+                                    v-if="day.date"
                                     class="h-10 w-10 flex flex-col items-center justify-center relative rounded-lg text-[14px] transition-all duration-300"
                                     :class="{
                                         'border-red-700 border-2 bg-red-500 hover:bg-red-600': day.payments.length && isPast(day.date),
                                         'border-blue-800 border-2 bg-blue-600 hover:bg-blue-500': day.payments.length && !isPast(day.date),
                                         'border-blue-600 border-4 hover:bg-blue-400': isToday(day.date) && !day.payments.length,
                                         'hover:bg-blue-100': !isToday(day.date) && !day.payments.length,
-                                    }">
+                                    }"
+                                >
                                     <span class="font-medium">{{ day.date }}</span>
-                                    <div v-if="day.payments.length"
-                                        class="absolute bottom-1 text-[9px] font-semibold text-white">
+                                    <div
+                                        v-if="day.payments.length"
+                                        class="absolute bottom-1 text-[9px] font-semibold text-white"
+                                    >
                                         {{ day.payments.length }}x
+                                    </div>
+
+                                    <!-- Tooltip -->
+                                    <div
+                                        v-if="day.payments.length"
+                                        class="absolute z-10 bottom-full mb-1 p-1 px-2 rounded bg-black text-white text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        {{ day.payments.map(p => p.name).join(", ") }}
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +172,7 @@ const isToday = (dayDate: number) => {
 onMounted(async () => {
     try {
         await subscriptionStore.getAllSubscriptions(userStore.loggedInUser!.id);
-        calendarDays.value = getCalendarForMonth(subscriptions.value);
+        calendarDays.value = getCalendarForMonth(subscriptions.value, currentMonth.value, currentYear.value);
     } catch (err) {
         error.value = 'Failed to load calendar data';
     }
