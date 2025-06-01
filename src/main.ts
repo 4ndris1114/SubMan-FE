@@ -17,6 +17,8 @@ library.add(fas);
 // Register FontAwesome component globally
 app.component('fa', FontAwesomeIcon);
 
+app.use(createPinia());
+
 (async () => {
     const userStore = useUserStore();
     await userStore.initAuth();
