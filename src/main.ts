@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import '@/assets/css/main.css';
+import './assets/css/main.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -19,7 +19,7 @@ app.component('fa', FontAwesomeIcon);
 
 (async () => {
     const userStore = useUserStore();
-    await userStore.initAuth(); // ✅ allowed here
+    await userStore.initAuth();
     app.use(router);
     app.mount("#app");
   })();
