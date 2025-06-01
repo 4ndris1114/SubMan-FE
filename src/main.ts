@@ -17,8 +17,9 @@ library.add(fas);
 // Register FontAwesome component globally
 app.component('fa', FontAwesomeIcon);
 
-app.use(createPinia());
-const userStore = useUserStore();
-await userStore.initAuth();
-app.use(router);
-app.mount('#app');
+(async () => {
+    const userStore = useUserStore();
+    await userStore.initAuth(); // ✅ allowed here
+    app.use(router);
+    app.mount("#app");
+  })();
