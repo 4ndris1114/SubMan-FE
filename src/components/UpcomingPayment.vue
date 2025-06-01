@@ -100,7 +100,7 @@ const subscriptionStore = useSubscriptionStore();
 const userStore = useUserStore();
 const error = ref<string | null>(null);
 
-const calendar = ref<Array<{ date: number; payments: ISubscription[] }>>([]);
+const calendar = ref<Array<{ date: number | null; payments: ISubscription[] }>>([]);
 const calendarDays = computed(() => calendar.value);
 
 const selectedPayments = ref<ISubscription[]>([]);
